@@ -12,7 +12,7 @@ const app = express();
 
 // ✅ Allow dynamic origins from .env
 const allowedOrigins = [
-  "http://localhost:5173",
+  // "http://localhost:5173",
   "https://starketfrontend.vercel.app"
 ];
 
