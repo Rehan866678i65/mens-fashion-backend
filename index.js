@@ -11,22 +11,15 @@ const mongoose = require('mongoose');
 const app = express();
 
 // ✅ Allow dynamic origins from .env
-const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
-  : [];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://starketfrontend.vercel.app"
+];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("❌ Not allowed by CORS: " + origin));
-    }
-  },
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+}));
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Preflight support
