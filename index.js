@@ -8,48 +8,56 @@ const logger = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-// Routes
-const BrandRoutes = require('./routes/Brand.routes');
-const ProductRoutes = require('./routes/Product.routes');
-const SavedModelRoutes = require('./routes/SavedModel.routes');
-const CategorylRoutes = require('./routes/Category.routes');
-const AddArealRoutes = require('./routes/AddArea.routes');
-const SupportPersonRoutes = require('./routes/SupportPerson.routes');
-const TechnicalPersonRoutes = require('./routes/TechnicalPerson.routes');
-const TicketPersonRoutes = require('./routes/Ticket.routes');
-const RegisterRoutes = require('./routes/Register.routes');
-const loginRoutes = require('./routes/Login.routes');
-const protectedRoutes = require('./routes/protectedRoute');
-
 const app = express();
 
-// Enable CORS
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  credentials: true
-}));
+// ✅ Allow dynamic origins from .env
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
+  : [];
 
-// Middleware
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("❌ Not allowed by CORS: " + origin));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Preflight support
+
+// ✅ Debug incoming origin
+app.use((req, res, next) => {
+  console.log("🌐 Incoming request from origin:", req.headers.origin);
+  next();
+});
+
+// ✅ Middleware
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Use Routes
-app.use('/brand', BrandRoutes);
-app.use('/Product', ProductRoutes);
-app.use('/SavedModel', SavedModelRoutes);
-app.use('/Categoryl', CategorylRoutes);
-app.use('/Areal', AddArealRoutes);
-app.use('/SupportPerson', SupportPersonRoutes);
-app.use('/TechnicalPerson', TechnicalPersonRoutes);
-app.use('/Ticket', TicketPersonRoutes);
-app.use('/Register', RegisterRoutes);
-app.use('/api', loginRoutes);
-app.use('/api', protectedRoutes);
+// ✅ Routes
+app.use('/brand', require('./routes/Brand.routes'));
+app.use('/Product', require('./routes/Product.routes'));
+app.use('/SavedModel', require('./routes/SavedModel.routes'));
+app.use('/Categoryl', require('./routes/Category.routes'));
+app.use('/Areal', require('./routes/AddArea.routes'));
+app.use('/SupportPerson', require('./routes/SupportPerson.routes'));
+app.use('/TechnicalPerson', require('./routes/TechnicalPerson.routes'));
+app.use('/Ticket', require('./routes/Ticket.routes'));
+app.use('/Register', require('./routes/Register.routes'));
+app.use('/api', require('./routes/Login.routes'));
+app.use('/api', require('./routes/protectedRoute'));
 
-// MongoDB connection and server start
+// ✅ MongoDB Connection and Server Start
 const port = process.env.PORT || 5000;
 
 const mongoDb = async () => {
@@ -68,17 +76,18 @@ const mongoDb = async () => {
 
 mongoDb();
 
-// Catch 404
+// ✅ 404 handler
 app.use((req, res, next) => {
   next(createError(404));
 });
 
-// Error handler
+// ✅ Global error handler
 app.use((err, req, res, next) => {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
   res.status(err.status || 500);
-  res.send({ error: err.message }); // You can use res.render if using EJS
+  res.send({
+    success: false,
+    message: err.message || 'Internal Server Error',
+  });
 });
 
 module.exports = app;
