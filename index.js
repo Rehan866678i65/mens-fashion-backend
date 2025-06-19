@@ -57,6 +57,11 @@ app.use('/Register', require('./routes/Register.routes'));
 app.use('/api', require('./routes/Login.routes'));
 app.use('/api', require('./routes/protectedRoute'));
 
+// ✅ Root route for testing
+app.get("/", (req, res) => {
+  res.send("✅ Backend API is running!");
+});
+
 // ✅ MongoDB Connection and Server Start
 const port = process.env.PORT || 5000;
 
@@ -89,5 +94,8 @@ app.use((err, req, res, next) => {
     message: err.message || 'Internal Server Error',
   });
 });
+
+
+
 
 module.exports = app;
