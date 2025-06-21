@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Register = require("../model/Register");
 const bcrypt = require("bcryptjs"); // ✅ bcrypt जोड़ें
 
-const JWT_SECRET = "your_jwt_secret_key"; // 👉 सुझाव: इसे .env में रखें
+// const JWT_SECRET = "your_jwt_secret_key"; // 👉 सुझाव: इसे .env में रखें
 
 class LoginController {
   async loginUser(req, res) {
