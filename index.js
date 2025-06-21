@@ -10,9 +10,9 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-// ✅ Allow dynamic origins from .env
-const allowedOrigins = process.env.FRONTEND_URLL
-  ? process.env.FRONTEND_URLL.split(',').map(url => url.trim())
+// ✅ Allowed origins from .env
+const allowedOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
   : [];
 
 const corsOptions = {
@@ -20,7 +20,8 @@ const corsOptions = {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("❌ Not allowed by CORS: " + origin));
+      console.warn("❌ Blocked by CORS:", origin);
+      callback(null, false); // Don't throw error, just block
     }
   },
   credentials: true,
@@ -31,7 +32,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Preflight support
 
-// ✅ Debug incoming origin
+// ✅ Log incoming origin
 app.use((req, res, next) => {
   console.log("🌐 Incoming request from origin:", req.headers.origin);
   next();
@@ -57,12 +58,12 @@ app.use('/Register', require('./routes/Register.routes'));
 app.use('/api', require('./routes/Login.routes'));
 app.use('/api', require('./routes/protectedRoute'));
 
-// ✅ Root route for testing
+// ✅ Root test route
 app.get("/", (req, res) => {
   res.send("✅ Backend API is running!");
 });
 
-// ✅ MongoDB Connection and Server Start
+// ✅ Connect to MongoDB and start server
 const port = process.env.PORT || 5000;
 
 const mongoDb = async () => {
@@ -94,8 +95,5 @@ app.use((err, req, res, next) => {
     message: err.message || 'Internal Server Error',
   });
 });
-
-
-
 
 module.exports = app;
