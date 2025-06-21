@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const Register = require("../model/Register");
-const bcrypt = require("bcryptjs"); // ✅ bcrypt जोड़ें
 
-// const JWT_SECRET = "your_jwt_secret_key"; // 👉 सुझाव: इसे .env में रखें
+const JWT_SECRET = process.env.JWT_SECRET || "defaultsecret"; // better from .env
 
 class LoginController {
   async loginUser(req, res) {
@@ -19,9 +18,8 @@ class LoginController {
         return res.status(401).json({ error: "Invalid email or password." });
       }
 
-      // ✅ Compare bcrypt hashed password
-      const isPasswordMatch = await bcrypt.compare(password, user.password);
-      if (!isPasswordMatch) {
+      // ✅ Plain password compare (NO bcrypt)
+      if (user.password !== password) {
         return res.status(401).json({ error: "Invalid email or password." });
       }
 
