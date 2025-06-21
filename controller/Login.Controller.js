@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 const Register = require("../model/Register");
-// const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs"); // ✅ bcrypt जोड़ें
 
-const JWT_SECRET = "your_jwt_secret_key"; // Replace with environment variable in production
+const JWT_SECRET = "your_jwt_secret_key"; // 👉 सुझाव: इसे .env में रखें
 
 class LoginController {
   async loginUser(req, res) {
@@ -15,7 +15,13 @@ class LoginController {
 
       const user = await Register.findOne({ email });
 
-      if (!user || user.password !== password) {
+      if (!user) {
+        return res.status(401).json({ error: "Invalid email or password." });
+      }
+
+      // ✅ Compare bcrypt hashed password
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+      if (!isPasswordMatch) {
         return res.status(401).json({ error: "Invalid email or password." });
       }
 
@@ -29,7 +35,7 @@ class LoginController {
       res.status(200).json({
         success: true,
         message: "Login successful",
-        token, // Include the token
+        token,
         user: {
           id: user._id,
           email: user.email,

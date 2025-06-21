@@ -1,27 +1,29 @@
-require('dotenv').config(); // Load environment variables
+// ✅ Load environment variables
+require('dotenv').config();
 
-const createError = require('http-errors');
 const express = require('express');
+const cors = require('cors');
+const createError = require('http-errors');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const cors = require('cors');
 const mongoose = require('mongoose');
 
 const app = express();
 
-// ✅ Allowed origins from .env
+// ✅ Correctly load allowed origins
 const allowedOrigins = process.env.FRONTEND_URL
   ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
   : [];
 
 const corsOptions = {
   origin: function (origin, callback) {
+    // ✅ Allow if origin is in list OR origin is undefined (like in curl/Postman)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       console.warn("❌ Blocked by CORS:", origin);
-      callback(null, false); // Don't throw error, just block
+      callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
@@ -29,12 +31,15 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
+// ✅ Use CORS
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Preflight support
 
-// ✅ Log incoming origin
+// ✅ Preflight support
+app.options("*", cors(corsOptions));
+
+// ✅ Log incoming requests
 app.use((req, res, next) => {
-  console.log("🌐 Incoming request from origin:", req.headers.origin);
+  console.log("🌐 Request from:", req.headers.origin);
   next();
 });
 
@@ -58,41 +63,38 @@ app.use('/Register', require('./routes/Register.routes'));
 app.use('/api', require('./routes/Login.routes'));
 app.use('/api', require('./routes/protectedRoute'));
 
-// ✅ Root test route
+// ✅ Root route
 app.get("/", (req, res) => {
   res.send("✅ Backend API is running!");
 });
 
-// ✅ Connect to MongoDB and start server
+// ✅ MongoDB connect + Start server
 const port = process.env.PORT || 5000;
 
 const mongoDb = async () => {
   try {
     await mongoose.connect(process.env.DATABASE_URL);
     console.log('✅ Connected to MongoDB');
-
     app.listen(port, () => {
-      console.log(`🚀 Server running at http://localhost:${port}`);
+      console.log(`🚀 Server running on http://localhost:${port}`);
     });
   } catch (error) {
-    console.error('❌ MongoDB connection error:', error);
+    console.error('❌ MongoDB error:', error);
     process.exit(1);
   }
 };
 
 mongoDb();
 
-// ✅ 404 handler
+// ✅ 404 & error handler
 app.use((req, res, next) => {
   next(createError(404));
 });
 
-// ✅ Global error handler
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.send({
+  res.status(err.status || 500).json({
     success: false,
-    message: err.message || 'Internal Server Error',
+    message: err.message || "Internal Server Error"
   });
 });
 
