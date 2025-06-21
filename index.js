@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // ✅ Allow dynamic origins from .env
-const allowedOrigins = process.env.FRONTEND_URL
+const allowedOrigins = process.env.FRONTEND_URLL
   ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
   : [];
 
