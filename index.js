@@ -12,36 +12,55 @@ const mongoose = require('mongoose');
 const app = express();
 
 // ✅ Correctly load allowed origins
-const allowedOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
-  : [];
+// const allowedOrigins = process.env.FRONTEND_URL
+//   ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
+//   : [];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    // ✅ Allow if origin is in list OR origin is undefined (like in curl/Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.warn("❌ Blocked by CORS:", origin);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     // ✅ Allow if origin is in list OR origin is undefined (like in curl/Postman)
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       console.warn("❌ Blocked by CORS:", origin);
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true,
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+// };
 
-// ✅ Use CORS
-app.use(cors(corsOptions));
+// // ✅ Use CORS
+// app.use(cors(corsOptions));
 
-// ✅ Preflight support
-app.options("*", cors(corsOptions));
+// // ✅ Preflight support
+// app.options("*", cors(corsOptions));
 
-// ✅ Log incoming requests
-app.use((req, res, next) => {
-  console.log("🌐 Request from:", req.headers.origin);
-  next();
-});
+// // ✅ Log incoming requests
+// app.use((req, res, next) => {
+//   console.log("🌐 Request from:", req.headers.origin);
+//   next();
+// });
+app.use(
+  cors({
+    origin: ["https://starketfrontend.vercel.app"], // Add your frontend origin here
+    methods: ["POST", "GET", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-CSRF-Token",
+      "X-Requested-With",
+      "Accept",
+      "Accept-Version",
+      "Content-Length",
+      "Content-MD5",
+      "Date",
+      "X-Api-Version",
+    ], // Adjust allowed headers if needed
+  })
+);
 
 // ✅ Middleware
 app.use(logger('dev'));
@@ -66,6 +85,9 @@ app.use('/api', require('./routes/protectedRoute'));
 // ✅ Root route
 app.get("/", (req, res) => {
   res.send("✅ Backend API is running!");
+});
+app.get("/api/test", (req, res) => {
+  res.json({ message: "CORS and API working!" });
 });
 
 // ✅ MongoDB connect + Start server

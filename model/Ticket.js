@@ -19,6 +19,15 @@ const TicketTbl = new mongoose.Schema({
     MobileNo: {
         type: String
     },
+     ComplainNo: {
+        type: String
+    },
+        Description: {
+        type: String
+    },
+        AlternateNo: {
+        type: String
+    },
 
     Brand: {
         type: String

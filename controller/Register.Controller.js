@@ -9,12 +9,14 @@ class RegisterController {
   // Create new user account
 async insertData(req, res) {
   try {
-    const { email, mobile, password, role } = req.body;
+    const { email, mobile, password,taluka,alternateMobile, role } = req.body;
 
     const reg = new Register({
       email,
       mobile,
       password,
+      Taluka : taluka,
+      Alternate: alternateMobile,
       role: Array.isArray(role) ? role : [role], // make sure it's an array
     });
 
