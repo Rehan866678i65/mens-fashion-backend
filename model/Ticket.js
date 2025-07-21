@@ -10,6 +10,9 @@ const TicketTbl = new mongoose.Schema({
     MiddleName: {
         type: String
     },
+    DealerName:{
+            type: String 
+    },
     LastName: {
         type: String
     },

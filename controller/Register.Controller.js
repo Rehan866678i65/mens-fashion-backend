@@ -9,15 +9,34 @@ class RegisterController {
   // Create new user account
 async insertData(req, res) {
   try {
-    const { email, mobile, password,taluka,alternateMobile, role } = req.body;
-
-    const reg = new Register({
+    const {
+      Nema,
       email,
+ 
       mobile,
       password,
-      Taluka : taluka,
+      taluka,
+      alternateMobile,
+      role,
+      addressLine1,
+      addressLine2,
+      sparePartAllowed,
+      photos // This should be an array of image URLs or filenames
+    } = req.body;
+
+    const reg = new Register({
+      Nema,
+      email,
+      
+      mobile,
+      password,
+      Taluka: taluka,
       Alternate: alternateMobile,
-      role: Array.isArray(role) ? role : [role], // make sure it's an array
+      role: Array.isArray(role) ? role : [role], // Ensure it's always an array
+      addressLine1,
+      addressLine2,
+      sparePartAllowed: sparePartAllowed === true || sparePartAllowed === "true", // accept string or boolean
+      photos: Array.isArray(photos) ? photos : [], // ensure array
     });
 
     const response = await reg.save();
@@ -28,9 +47,13 @@ async insertData(req, res) {
     });
   } catch (err) {
     console.error("Insert error:", err);
-    return res.status(500).json({ error: "Internal server error.", details: err.message });
+    return res.status(500).json({
+      error: "Internal server error.",
+      details: err.message,
+    });
   }
 }
+
 
 
    async getAllUsers(req, res) {
