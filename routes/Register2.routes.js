@@ -1,6 +1,6 @@
 // routes/register.js
 const express = require('express');
-const RegisterController = require('../controller/Register.Controller');
+const RegisterController = require('../controller/Register2.Controller');
 // const RegisterController = require('../controller/Register.Controller');
 
 const router = express.Router();

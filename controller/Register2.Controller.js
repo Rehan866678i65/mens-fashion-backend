@@ -2,7 +2,7 @@
 
 // controllers/RegisterController.js
 // const bcrypt = require("bcryptjs");
-const Register = require("../model/Register");
+const Register = require("../model/Register2");
 // const Registertbl = require('../model/Register'); // mongoose model
 
 class RegisterController {

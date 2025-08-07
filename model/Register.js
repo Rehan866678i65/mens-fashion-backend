@@ -1,31 +1,31 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  Nema:{type:String},
-    DealerName:{type:String},
-  email: { type: String, required: true, unique: true },
-  mobile: { type: String, required: true },
-  Taluka: { type: String, required: true },
-  Alternate: { type: String, required: true },
-  password: { type: String, required: true },
-  role: [{ type: String, required: true }],
+  Nema: { type: String },
+  DealerName: { type: String },
+  email: { type: String, required: true, unique: true },  // ✅ Sirf email required rakha
+  mobile: { type: String },
+  Taluka: { type: String },
+  Alternate: { type: String },
+  password: { type: String },
+  role: [{ type: String }],
 
   // ✅ Address fields
-  addressLine1: { type: String, required: true },
+  addressLine1: { type: String },
   addressLine2: { type: String },
 
-  // ✅ 5 Photos (store URLs or file references)
+  // ✅ Photos (optional)
   photos: {
-    type: [String], // Array of 5 photo URLs or filenames
-    validate: [arrayLimit, "{PATH} must contain exactly 5 photos"],
+    type: [String],
+    validate: [arrayLimit, "{PATH} must contain max 5 photos"],
     default: []
   },
 
-  // ✅ Spare part deduction permission
-  sparePartAllowed: { type: String},
+  // ✅ Spare part deduction permission (optional)
+  sparePartAllowed: { type: String },
 });
 
-// Ensure exactly 5 photos (optional strict validation)
+// Ensure maximum 5 photos
 function arrayLimit(val) {
   return val.length <= 5;
 }

@@ -42,7 +42,7 @@ const app = express();
 //   console.log("🌐 Request from:", req.headers.origin);
 //   next();
 // });
-const allowedOrigins = ["https://starketfrontend.vercel.app"]; // React frontend
+const allowedOrigins = ["http://localhost:5173"]; // React frontend
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -80,8 +80,11 @@ app.use('/SupportPerson', require('./routes/SupportPerson.routes'));
 app.use('/TechnicalPerson', require('./routes/TechnicalPerson.routes'));
 app.use('/Ticket', require('./routes/Ticket.routes'));
 app.use('/Register', require('./routes/Register.routes'));
+app.use('/Register2', require('./routes/Register2.routes'));
 app.use('/api', require('./routes/Login.routes'));
+app.use('/api', require('./routes/Login2.routes'));
 app.use('/api', require('./routes/protectedRoute'));
+app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 
 // ✅ Root route
 app.get("/", (req, res) => {

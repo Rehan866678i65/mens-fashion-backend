@@ -1,5 +1,6 @@
 const express = require("express");
 const verifyToken = require("../middleware/jwtToken.middleware");
+// const checkSubscription = require("../middleware/Subscription.Validity");
 
 const router = express.Router();
 
@@ -12,5 +13,14 @@ router.get("/protected", verifyToken, (req, res) => {
     user: req.user,
   });
 });
+
+
+
+// router.get("/dashboard", verifyToken, checkSubscription, (req, res) => {
+//   res.json({ message: "Welcome to Admin Dashboard" });
+// });
+
+
+
 
 module.exports = router;
