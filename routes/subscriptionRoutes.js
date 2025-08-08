@@ -9,6 +9,7 @@ router.put("/:id", SubscriptionController.update);
 router.delete("/:id", SubscriptionController.delete);
 router.put("/check-expiry/all", SubscriptionController.checkExpiry);
 router.get("/check-plan/:userId", SubscriptionController.checkUserPlanStatus);
+router.get("/user-subscription/:userId", SubscriptionController.getSubscriptionInfo);
 
 
 module.exports = router;

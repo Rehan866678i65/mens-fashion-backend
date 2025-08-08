@@ -20,8 +20,10 @@ class AddAreaController{
 
   
   async getData(req, res) {
+    const userId=req.params.userId
+    console.log("papath oarams",userId)
     try {
-      const response = await AddArea.find();
+      const response = await AddArea.find({userId:userId});
       res.status(200).json({
         List: response,
         msg: "Data fetched successfully.",

@@ -87,12 +87,12 @@ class SubscriptionController {
 
       const subscription = await Subscription.findOne({ userId }).sort({ expiryDate: -1 });
 
-      if (!subscription) {
-        return res.status(404).json({ message: "No subscription found" });
-      }
+      // if (!subscription) {
+      //   return res.status(404).json({ message: "No subscription found" });
+      // }
 
       const planStatus =
-        subscription.expiryDate < today ? "Expired" : "Active";
+        subscription?.expiryDate < today ? "Expired" : "Active";
 
       res.json({
        

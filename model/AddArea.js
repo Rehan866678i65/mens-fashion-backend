@@ -6,10 +6,17 @@ const AddAreaTBL= new mongoose.Schema({
 
     Name:{
         type:String
+
     },
      Status:{
         type:String
     },
+    userId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User2", 
+        required: true 
+      },  // ✅ Link to user
+     // Optional (for dis
 
    
 })

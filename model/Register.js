@@ -9,6 +9,11 @@ const userSchema = new mongoose.Schema({
   Alternate: { type: String },
   password: { type: String },
   role: [{ type: String }],
+  userId: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: "User2", 
+          required: true 
+        },  // 
 
   // ✅ Address fields
   addressLine1: { type: String },

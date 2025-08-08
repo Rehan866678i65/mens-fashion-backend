@@ -18,6 +18,7 @@ async insertData(req, res) {
       taluka,
       alternateMobile,
       role,
+      userId,
       addressLine1,
       addressLine2,
       sparePartAllowed,
@@ -27,7 +28,7 @@ async insertData(req, res) {
     const reg = new Register({
       Nema,
       email,
-      
+      userId,
       mobile,
       password,
       Taluka: taluka,
@@ -58,7 +59,8 @@ async insertData(req, res) {
 
    async getAllUsers(req, res) {
     try {
-      const users = await Register.find(); // MongoDBમાંથી બધાં users લાવો
+      const userId=req.query.userId
+      const users = await Register.find({userId : userId}); // MongoDBમાંથી બધાં users લાવો
       res.status(200).json({ success: true, users });
     } catch (error) {
       console.error("Error fetching users:", error);

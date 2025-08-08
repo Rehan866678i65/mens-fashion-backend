@@ -42,7 +42,7 @@ const app = express();
 //   console.log("🌐 Request from:", req.headers.origin);
 //   next();
 // });
-const allowedOrigins = ["http://localhost:5173"]; // React frontend
+const allowedOrigins = ["https://starketfrontend.vercel.app"]; // React frontend
 
 const corsOptions = {
   origin: function (origin, callback) {

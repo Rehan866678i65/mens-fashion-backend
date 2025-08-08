@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
   rconn.insertData(req, res);
 });
 
-router.get('/', (req, res) => {
+router.get('/user-area/:userId', (req, res) => {
   const rconn = new AddAreaController();
   rconn.getData(req, res);
 });
