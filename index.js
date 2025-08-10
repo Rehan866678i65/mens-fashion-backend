@@ -46,7 +46,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
       "https://starketfrontend.vercel.app",
-      "http://localhost:5000"
+      // "http://localhost:5000"
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
