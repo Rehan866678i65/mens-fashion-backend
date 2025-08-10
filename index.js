@@ -42,10 +42,12 @@ const app = express();
 //   console.log("🌐 Request from:", req.headers.origin);
 //   next();
 // });
-const allowedOrigins = ["https://starketfrontend.vercel.app"]; // React frontend
-
 const corsOptions = {
   origin: function (origin, callback) {
+    const allowedOrigins = [
+      "https://starketfrontend.vercel.app",
+      "http://localhost:5000"
+    ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -59,7 +61,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // ✅ यहां भी same corsOptions दो
+app.options("*", cors(corsOptions)); // Preflight at top
+// ✅ यहां भी same corsOptions दो
  // Preflight
 
 
