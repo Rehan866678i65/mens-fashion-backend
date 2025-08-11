@@ -32,6 +32,13 @@ const TicketTbl = new mongoose.Schema({
         type: String
     },
 
+     userId: { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: "User2", 
+            required: true 
+          },  // ✅ Link to user
+         // Optional (for dis
+
     Brand: {
         type: String
     },

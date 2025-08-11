@@ -8,7 +8,8 @@ router.post('/', (req, res) => {
   rconn.insertData(req, res);
 });
 
-router.get('/', (req, res) => {
+router.get('/user-Category/:userId', (req, res) => {
+  console.log("Incoming ID:", req.params.id);
   const rconn = new CategoryController();
   rconn.getData(req, res);
 });

@@ -9,7 +9,7 @@ router.post('/', (req, res) => {
   rconn.insertData(req, res);
 });
 
-router.get('/', (req, res) => {
+router.get('/user-Model/:userId', (req, res) => {
   const rconn = new SavedModelController();
   rconn.getData(req, res);
 });

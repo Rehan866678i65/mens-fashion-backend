@@ -23,5 +23,10 @@ const AddProductTbl= new mongoose.Schema({
      Status:{
         type:String
     },
+       userId: { 
+                type: mongoose.Schema.Types.ObjectId, 
+                ref: "User2", 
+                required: true 
+              }, 
 })
 module.exports=mongoose.model("ProductTbl",AddProductTbl)

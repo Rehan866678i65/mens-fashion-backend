@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
   rconn.insertData(req, res);
 });
 
-router.get('/', (req, res) => {
+router.get('/user-Ticket/:userId', (req, res) => {
   const rconn = new TicketTController();
   rconn.getData(req, res);
 });

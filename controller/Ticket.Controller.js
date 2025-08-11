@@ -21,7 +21,8 @@ class TicketController{
   
   async getData(req, res) {
     try {
-      const response = await TicketTbl.find();
+      const userId=req.params.userId
+      const response = await TicketTbl.find({userId:userId});
       res.status(200).json({
         List: response,
         msg: "Data fetched successfully.",

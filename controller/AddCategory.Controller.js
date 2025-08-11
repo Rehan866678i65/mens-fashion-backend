@@ -21,7 +21,8 @@ class CategoryController{
   
   async getData(req, res) {
     try {
-      const response = await AddCaregory.find();
+      const userId=req.params.userId
+      const response = await AddCaregory.find({userId:userId});
       res.status(200).json({
         List: response,
         msg: "Data fetched successfully.",

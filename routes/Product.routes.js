@@ -9,7 +9,7 @@ router.post('/', (req, res) => {
   rconn.insertData(req, res);
 });
 
-router.get('/', (req, res) => {
+router.get('/user-Product/:userId', (req, res) => {
   const rconn = new ProductController();
   rconn.getData(req, res);
 });

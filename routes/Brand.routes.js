@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
   rconn.insertData(req, res);
 });
 
-router.get('/', (req, res) => {
+router.get('/user-Brand/:userId', (req, res) => {
   const rconn = new BrandController();
   rconn.getData(req, res);
 });

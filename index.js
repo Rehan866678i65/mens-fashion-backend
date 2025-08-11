@@ -45,7 +45,7 @@ const app = express();
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      "https://starketfrontend.vercel.app",
+      "http://localhost:5174",
       // "http://localhost:5000"
     ];
     if (!origin || allowedOrigins.includes(origin)) {
