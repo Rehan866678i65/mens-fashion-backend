@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
   rconn.insertData(req, res);
 });
 
-router.get('/', (req, res) => {
+router.get('/user-SupportPerson/:userId', (req, res) => {
   const rconn = new SupportPersonController();
   rconn.getData(req, res);
 });

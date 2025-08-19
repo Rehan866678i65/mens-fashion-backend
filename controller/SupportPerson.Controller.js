@@ -21,7 +21,9 @@ class BrandController{
   
   async getData(req, res) {
     try {
-      const response = await SupportPerson.find();
+          const userId=req.params.userId
+            console.log("SupportPerson oarams",userId)
+      const response = await SupportPerson.find({userId:userId});
       res.status(200).json({
         List: response,
         msg: "Data fetched successfully.",

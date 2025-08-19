@@ -22,7 +22,11 @@ const SupportPersonTBL= new mongoose.Schema({
      Password:{
         type:String
     },
-
+  userId: { 
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: "User", 
+          required: true 
+        },  // 
 
      ConfirmPassword:{
         type:String

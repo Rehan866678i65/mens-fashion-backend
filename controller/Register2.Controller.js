@@ -12,7 +12,7 @@ async insertData(req, res) {
     const {
       Nema,
       email,
- 
+ company,
       mobile,
       password,
       taluka,
@@ -27,7 +27,7 @@ async insertData(req, res) {
     const reg = new Register({
       Nema,
       email,
-      
+      company,
       mobile,
       password,
       Taluka: taluka,

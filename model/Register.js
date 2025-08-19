@@ -4,9 +4,9 @@ const userSchema = new mongoose.Schema({
   Nema: { type: String },
   DealerName: { type: String },
   email: { type: String, required: true, unique: true },  // ✅ Sirf email required rakha
-  mobile: { type: String },
+  mobile: { type: Number },
   Taluka: { type: String },
-  Alternate: { type: String },
+  Alternate: { type: Number },
   password: { type: String },
   role: [{ type: String }],
   userId: { 

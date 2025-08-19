@@ -22,7 +22,11 @@ const TechnicalPersonTBL= new mongoose.Schema({
      Password:{
         type:String
     },
-
+    userId: {
+    type: String,
+    required: true,
+    unique: true
+  },
 
      ConfirmPassword:{
         type:String
