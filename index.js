@@ -49,7 +49,7 @@ app.use("/product", require("./routes/Product.routes"));
 app.use("/order", require("./routes/Order.routes"));
 app.use("/Brands", require("./routes/Brands.routes"));
 app.use("/Orderitem", require("./routes/Orderitem.routes"));
-app.use("/payment", require("./routes/payment.routes"));
+// app.use("/payment", require("./routes/payment.routes"));
 
 
 
