@@ -57,16 +57,14 @@ exports.registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    //     const mailOptions = {
-    //         from: '"Hexashop" <memonraiyan669@gmail.com>',
-    //         to: email,
-    //         subject: 'Hexashop Account Verification',
-    //         text: `Hello ${name}, your verification OTP is: ${generatedOtp}`
-    //     };
+        const mailOptions = {
+            from: '"Hexashop" <memonraiyan669@gmail.com>',
+            to: email,
+            subject: 'Hexashop Account Verification',
+            text: `Hello ${name}, your verification OTP is: ${generatedOtp}`
+        };
 
-    //    await transporter.sendMail(mailOptions);
-
-await transporter.sendMail(mailOptions);
+       await transporter.sendMail(mailOptions);
 
 user = await User.create({
     name,
