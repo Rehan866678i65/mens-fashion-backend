@@ -1,111 +1,134 @@
+const Product = require("../model/Product");
 
-const AddProducts = require('../model/AddProduct');
+class ProductController {
 
-class ProductController{
-  async insertData(req, res) {
+    // 1️⃣ DATA ADD KARNA
+static async insertData(req, res) {
     try {
-      const body = req.body;
-      const reg = new AddProducts(body);
-      const response = await reg.save();
-      res.status(200).json({
-        msg: "Successfully Stored.",
-        List: response,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: "Something wrong in database." });
+        console.log("Request body:", req.body);
+        const product = await Product.create(req.body);
+        console.log("Inserted product:", product);
+        res.status(201).json({
+            success: true,
+            message: "Product add ho gaya",
+            data: product
+        });
+    } catch (err) {
+        console.log("Error:", err);
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
     }
-  }
-
-  
-  async getData(req, res) {
-    try {
-      const userId=req.params.userId
-      console.log("papath oarams",userId)
-      const response = await AddProducts.find({userId:userId});
-      res.status(200).json({
-        List: response,
-        msg: "Data fetched successfully.",
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: "Failed to fetch data." });
-    }
-  }
-
-  async getDataId(req, res) {
-    try {
-      const id = req.params.id;
-      const response = await AddProducts.findById(id);
-      if (!response) {
-        return res.status(404).json({ msg: "Data not found." });
-      }
-      res.status(200).json({ List: response });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: "Failed to fetch data by id." });
-    }
-  }
-
-  async Put(req, res) {
-    try {
-      const id = req.params.id;
-      if (!id) return res.status(400).json({ msg: "ID missing." });
-      const updatedData = req.body;
-      const response = await AddProducts.findByIdAndUpdate(id, updatedData, { new: true });
-      if (!response) return res.status(404).json({ msg: "Data not found to update." });
-      res.status(200).json({
-        msg: "Data updated successfully.",
-        Data: response,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: "Failed to update data." });
-    }
-  }
-
-  async Delete(req, res) {
-    try {
-      const id = req.params.id;
-      if (!id) return res.status(400).json({ msg: "ID missing." });
-      const response = await AddProducts.findByIdAndDelete(id);
-      if (!response) return res.status(404).json({ msg: "Data not found to delete." });
-      res.status(200).json({ msg: "Data deleted successfully." });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ msg: "Failed to delete data." });
-    }
-  }
-
- // Controller method:
-async AddProductNameid(req, res) {
-  try {
-    var obj = req.params.ProductName;
-    AddProducts.find({
-      $and: [
-        { ProductName: obj }
-      ]
-    })
-    .then((response) => {
-      console.log(response);
-      if (response.length > 0) {
-        res.status(200).json({ msg: "Successfully fetched", response });
-      } else {
-        res.status(404).json({ msg: "No data found" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        msg: "2. Catch: Something went wrong while fetching data",
-        errormsg: err,
-      });
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: "1. Catch: Something went wrong in database" });
-  }
 }
 
+
+    // 2️⃣ SAB DATA LANA
+ // 2️⃣ SAB DATA LANA (Filter ke saath)
+static async getDataAll(req, res) {
+    try {
+        // URL se category name pakadne ke liye (e.g. ?category=Mens)
+        const { category } = req.query;
+        
+        let filter = {};
+        
+        // Agar URL mein category aayi hai, toh usse filter object mein daal do
+        if (category) {
+            filter.category = category; 
+        }
+
+        // 'filter' pass karo: agar empty hai {} toh saare aayenge, agar value hai toh filtered aayenge
+        const products = await Product.find(filter); 
+        
+        res.status(200).json({
+            success: true,
+            count: products.length,
+            data: products
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
 }
-module.exports=ProductController
+
+    // 3️⃣ ID SE DATA LANA
+    static async getDataById(req, res) {
+        try {
+            const product = await Product.findById(req.params.id).populate("category");
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product nahi mila"
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                data: product
+            });
+        } catch (err) {
+            res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
+    // 4️⃣ DATA UPDATE KARNA
+    static async updateData(req, res) {
+        try {
+            const product = await Product.findByIdAndUpdate(
+                req.params.id,
+                req.body,
+                { new: true }
+            );
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product nahi mila"
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: "Product update ho gaya",
+                data: product
+            });
+        } catch (err) {
+            res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
+    // 5️⃣ DATA DELETE KARNA
+    static async deleteData(req, res) {
+        try {
+            const product = await Product.findByIdAndDelete(req.params.id);
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product nahi mila"
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: "Product delete ho gaya"
+            });
+        } catch (err) {
+            res.status(500).json({
+                success: false,
+                message: err.message
+            });
+        }
+    }
+}
+
+module.exports = ProductController;

@@ -1,38 +1,26 @@
 
-const express = require('express');
-const ProductController = require('../controller/Product.Controller');
-
+const express = require("express");
 const router = express.Router();
+const ProductController = require("../controller/Product.Controller");
+const upload = require("../middleware/upload")
 
-router.post('/', (req, res) => {
-  const rconn = new ProductController();
-  rconn.insertData(req, res);
-});
+// add product
+// Add product with multiple images + 1 video
+router.post("/", upload.fields([
+    { name: "images", maxCount: 4 },
+    { name: "video", maxCount: 1 }
+]), ProductController.insertData);
 
-router.get('/user-Product/:userId', (req, res) => {
-  const rconn = new ProductController();
-  rconn.getData(req, res);
-});
+// get all
+router.get("/", ProductController.getDataAll);
 
-router.get('/:id', (req, res) => {
-  const rconn = new ProductController();
-  rconn.getDataId(req, res);
-});
+// get by id
+router.get("/:id", ProductController.getDataById);
 
-router.put('/:id', (req, res) => {
-  const rconn = new ProductController();
-  rconn.Put(req, res);
-});
+// update
+router.put("/:id", ProductController.updateData);
 
-router.delete('/:id', (req, res) => {
-  const rconn = new ProductController();
-  rconn.Delete(req, res);
-});
-
-router.get('/productname/:ProductName', (req, res) => {
-  const rconn = new ProductController();
-  rconn.AddProductNameid(req, res);
-});
-
+// delete
+router.delete("/:id", ProductController.deleteData);
 
 module.exports = router;
