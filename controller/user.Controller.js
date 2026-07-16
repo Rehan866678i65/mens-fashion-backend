@@ -64,21 +64,21 @@ exports.registerUser = async (req, res) => {
             text: `Hello ${name}, your verification OTP is: ${generatedOtp}`
         };
 
-        await transporter.sendMail(mailOptions);
+       await transporter.sendMail(mailOptions);
 
-        user = await User.create({
-            name,
-            email,
-            mobile,
-            password: hashedPassword,
-            otp: generatedOtp,
-            isVerified: false
-        });
+user = await User.create({
+    name,
+    email,
+    mobile,
+    password: hashedPassword,
+    otp: generatedOtp,
+    isVerified: false
+});
 
-        res.status(201).json({ 
-            message: "OTP sent! Please verify your email to activate your account.",
-            userId: user._id 
-        });
+res.status(201).json({ 
+    message: "OTP sent! Please verify your email to activate your account.",
+    userId: user._id 
+});
 
     } catch (error) {
         console.error("Registration Error:", error);
@@ -169,14 +169,14 @@ exports.forgotPassword = async (req, res) => {
         await user.save();
 
         // 3. EMAIL BHEJO (Ye zaroori hai!)
-        const mailOptions = {
-            from: 'Hexashop <memonraiyan669@gmail.com>',
-            to: email,
-            subject: 'Password Reset OTP - Hexashop',
-            text: `Aapka password reset karne ke liye OTP hai: ${resetOtp}`
-        };
+        // const mailOptions = {
+        //     from: 'Hexashop <memonraiyan669@gmail.com>',
+        //     to: email,
+        //     subject: 'Password Reset OTP - Hexashop',
+        //     text: `Aapka password reset karne ke liye OTP hai: ${resetOtp}`
+        // };
 
-        await transporter.sendMail(mailOptions);
+        // await transporter.sendMail(mailOptions);
 
         console.log(`FORGOT PASSWORD OTP for ${email}: ${resetOtp}`);
 
