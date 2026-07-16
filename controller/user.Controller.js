@@ -57,14 +57,16 @@ exports.registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
 
-        const mailOptions = {
-            from: '"Hexashop" <memonraiyan669@gmail.com>',
-            to: email,
-            subject: 'Hexashop Account Verification',
-            text: `Hello ${name}, your verification OTP is: ${generatedOtp}`
-        };
+    //     const mailOptions = {
+    //         from: '"Hexashop" <memonraiyan669@gmail.com>',
+    //         to: email,
+    //         subject: 'Hexashop Account Verification',
+    //         text: `Hello ${name}, your verification OTP is: ${generatedOtp}`
+    //     };
 
-       await transporter.sendMail(mailOptions);
+    //    await transporter.sendMail(mailOptions);
+
+await transporter.sendMail(mailOptions);
 
 user = await User.create({
     name,
@@ -82,7 +84,7 @@ res.status(201).json({
 
     } catch (error) {
         console.error("Registration Error:", error);
-        res.status(500).json({ message: "Something went wrong or Email failed 1!" });
+        res.status(500).json({ message: "Something went wrong or Email failed!" });
     }
 };
 
@@ -169,14 +171,14 @@ exports.forgotPassword = async (req, res) => {
         await user.save();
 
         // 3. EMAIL BHEJO (Ye zaroori hai!)
-        // const mailOptions = {
-        //     from: 'Hexashop <memonraiyan669@gmail.com>',
-        //     to: email,
-        //     subject: 'Password Reset OTP - Hexashop',
-        //     text: `Aapka password reset karne ke liye OTP hai: ${resetOtp}`
-        // };
+        const mailOptions = {
+            from: 'Hexashop <memonraiyan669@gmail.com>',
+            to: email,
+            subject: 'Password Reset OTP - Hexashop',
+            text: `Aapka password reset karne ke liye OTP hai: ${resetOtp}`
+        };
 
-        // await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
 
         console.log(`FORGOT PASSWORD OTP for ${email}: ${resetOtp}`);
 
