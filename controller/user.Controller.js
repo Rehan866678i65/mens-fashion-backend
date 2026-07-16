@@ -82,7 +82,7 @@ res.status(201).json({
 
     } catch (error) {
         console.error("Registration Error:", error);
-        res.status(500).json({ message: "Something went wrong or Email failed!" });
+        res.status(500).json({ message: "Something went wrong or Email failed 1!" });
     }
 };
 
