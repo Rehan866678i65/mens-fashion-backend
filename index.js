@@ -12,9 +12,6 @@ const mongoose = require("mongoose");
 const app = express();
 
 
-// ✅ MongoDB Connection for Local + Vercel
-let isConnected = false;
-
 const connectDB = async () => {
   if (isConnected) return;
 
