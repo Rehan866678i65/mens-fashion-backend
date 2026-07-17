@@ -15,10 +15,11 @@ const app = express();
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      "https://starketfrontend.vercel.app",
+      "https://mens-fashion-frontend-henna.vercel.app",
       "http://localhost:5173",
       "http://localhost:5174"
     ];
+
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -27,6 +28,9 @@ const corsOptions = {
   },
   credentials: true,
 };
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
