@@ -72,17 +72,24 @@ app.get("/api/test", (req, res) => {
   res.json({ success: true });
 });
 
-// ✅ MongoDB + Server start
 const PORT = process.env.PORT || 5000;
 
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => {
     console.log("✅ MongoDB Connected");
+
+    if (process.env.NODE_ENV !== "production") {
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+      });
+    }
   })
   .catch((err) => {
     console.error("❌ MongoDB error:", err);
-  })
+  });
+
+
 
 // ✅ Error handling
 app.use((req, res, next) => {
