@@ -11,80 +11,109 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// teststing ke liue 
 exports.registerUser = async (req, res) => {
     try {
+        console.log("REGISTER API HIT");
+        console.log(req.body);
+
         const { name, email, mobile, password } = req.body;
 
-        // 1. Check if user already exists
-        let user = await User.findOne({ $or: [{ email }, { mobile }] });
-
-        if (user) {
-            // AGAR USER HAI AUR VERIFIED BHI HAI -> Tabhi error do
-            if (user.isVerified) {
-                return res.status(400).json({ 
-                    message: "Email or Mobile number already registered and verified. Please login." 
-                });
-            } 
-            // AGAR USER HAI LEKIN VERIFIED NAHI HAI -> Toh use naya OTP bhej do aur details update kar do
-            else {
-                console.log("User exists but not verified. Updating details and sending new OTP...");
-                
-                const salt = await bcrypt.genSalt(10);
-                user.password = await bcrypt.hash(password, salt);
-                user.name = name;
-                user.mobile = mobile;
-                const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
-                user.otp = newOtp;
-
-                // Naya Mail bhejo
-                const mailOptions = {
-                    from: '"Hexashop" <memonraiyan669@gmail.com>',
-                    to: email,
-                    subject: 'Hexashop - New Verification Code',
-                    text: `Hello ${name}, your new verification OTP is: ${newOtp}`
-                };
-                await transporter.sendMail(mailOptions);
-                
-                await user.save();
-                return res.status(200).json({ 
-                    message: "User already pending verification. New OTP sent to your email!" 
-                });
+        res.status(200).json({
+            success: true,
+            message: "Register API working successfully",
+            data: {
+                name,
+                email,
+                mobile,
+                password
             }
-        }
-
-        // 2. AGAR USER BILKUL NAYA HAI -> Toh naya create karo (Aapka purana logic)
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-
-        const mailOptions = {
-            from: '"Hexashop" <memonraiyan669@gmail.com>',
-            to: email,
-            subject: 'Hexashop Account Verification',
-            text: `Hello ${name}, your verification OTP is: ${generatedOtp}`
-        };
-
-       await transporter.sendMail(mailOptions);
-
-user = await User.create({
-    name,
-    email,
-    mobile,
-    password: hashedPassword,
-    otp: generatedOtp,
-    isVerified: false
-});
-
-res.status(201).json({ 
-    message: "OTP sent! Please verify your email to activate your account.",
-    userId: user._id 
-});
+        });
 
     } catch (error) {
-        console.error("Registration Error:", error);
-        res.status(500).json({ message: "Something went wrong or Email failed!" });
+        console.log(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server Error"
+        });
     }
 };
+
+// exports.registerUser = async (req, res) => {
+//     try {
+//         const { name, email, mobile, password } = req.body;
+
+//         // 1. Check if user already exists
+//         let user = await User.findOne({ $or: [{ email }, { mobile }] });
+
+//         if (user) {
+//             // AGAR USER HAI AUR VERIFIED BHI HAI -> Tabhi error do
+//             if (user.isVerified) {
+//                 return res.status(400).json({ 
+//                     message: "Email or Mobile number already registered and verified. Please login." 
+//                 });
+//             } 
+//             // AGAR USER HAI LEKIN VERIFIED NAHI HAI -> Toh use naya OTP bhej do aur details update kar do
+//             else {
+//                 console.log("User exists but not verified. Updating details and sending new OTP...");
+                
+//                 const salt = await bcrypt.genSalt(10);
+//                 user.password = await bcrypt.hash(password, salt);
+//                 user.name = name;
+//                 user.mobile = mobile;
+//                 const newOtp = Math.floor(100000 + Math.random() * 900000).toString();
+//                 user.otp = newOtp;
+
+//                 // Naya Mail bhejo
+//                 const mailOptions = {
+//                     from: '"Hexashop" <memonraiyan669@gmail.com>',
+//                     to: email,
+//                     subject: 'Hexashop - New Verification Code',
+//                     text: `Hello ${name}, your new verification OTP is: ${newOtp}`
+//                 };
+//                 await transporter.sendMail(mailOptions);
+                
+//                 await user.save();
+//                 return res.status(200).json({ 
+//                     message: "User already pending verification. New OTP sent to your email!" 
+//                 });
+//             }
+//         }
+
+//         // 2. AGAR USER BILKUL NAYA HAI -> Toh naya create karo (Aapka purana logic)
+//         const salt = await bcrypt.genSalt(10);
+//         const hashedPassword = await bcrypt.hash(password, salt);
+//         const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+
+//         const mailOptions = {
+//             from: '"Hexashop" <memonraiyan669@gmail.com>',
+//             to: email,
+//             subject: 'Hexashop Account Verification',
+//             text: `Hello ${name}, your verification OTP is: ${generatedOtp}`
+//         };
+
+//        await transporter.sendMail(mailOptions);
+
+// user = await User.create({
+//     name,
+//     email,
+//     mobile,
+//     password: hashedPassword,
+//     otp: generatedOtp,
+//     isVerified: false
+// });
+
+// res.status(201).json({ 
+//     message: "OTP sent! Please verify your email to activate your account.",
+//     userId: user._id 
+// });
+
+//     } catch (error) {
+//         console.error("Registration Error:", error);
+//         res.status(500).json({ message: "Something went wrong or Email failed!" });
+//     }
+// };
 
 
 // 3. VERIFY OTP
