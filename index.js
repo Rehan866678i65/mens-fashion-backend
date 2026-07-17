@@ -24,6 +24,19 @@ const connectDB = async () => {
     throw error;
   }
 };
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.log("DB ERROR:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+});
 
 
 // Har request se pehle DB connect check
