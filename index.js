@@ -12,26 +12,37 @@ const mongoose = require("mongoose");
 const app = express();
 
 
-// ✅ MongoDB Connection
 let isConnected = false;
 
 const connectDB = async () => {
-  if (isConnected) {
-    return;
-  }
+  if (isConnected) return;
+
+  console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
 
   try {
     await mongoose.connect(process.env.DATABASE_URL);
 
     isConnected = true;
-
     console.log("✅ MongoDB Connected");
-
   } catch (error) {
     console.log("❌ MongoDB Error:", error.message);
     throw error;
   }
 };
+
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Database connection failed",
+      dbUrlExists: !!process.env.DATABASE_URL, // sirf true/false
+      error: error.message
+    });
+  }
+});
 
 
 // ✅ DB connect middleware (sirf ek baar)
